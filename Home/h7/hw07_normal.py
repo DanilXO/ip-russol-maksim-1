@@ -35,14 +35,6 @@ class Person:
         self.surname = self.surname[:-1] + 'ой'
         return f"{self.surname} {self.name[0]}. {self.f_name[0]}."
 
-    def display_parents_info(self):
-        """
-        Метод __str__() должен возвращать строку.
-        И в данном случае мы возвращаем базовую информацию о человеке.
-        И теперь консольный вывод не будет таким: <__main__.Person object at 0x00C0B718>
-        """
-        print(self.__str__())
-
     def __str__(self):
         return "{} {} {}".format(self.surname, self.name, self.f_name)
 
@@ -57,6 +49,8 @@ class Student(Person):
         self.subjects = {s.subject_name for s in subjects if self.class_group in s.classes_list}
 
     def get_parents(self):
+        # здесь можно было сократить, так как меняется только последняя часть, которую также можно было бы вставить 
+        # на основе гендера. Но применил инкапсуляцию, молодец 
         if self._gender == 'м':
             return print(
                 f'Родители ученика \'{self.class_group}\' класса {self.male_name_format()}'
@@ -67,6 +61,8 @@ class Student(Person):
                 f'отец: {self.father}, мать: {self.mother}')
 
     def get_student_subjects(self):
+        # здесь можно было сократить, так как меняется только последняя часть, которую также можно было бы вставить 
+        # на основе гендера. Но применил инкапсуляцию, молодец 
         if self._gender == 'м':
             return print(f"Ученик \'{self.class_group}\' класса {self.full_name_format()} "
                          f"изучает предметы: {self.subjects}", end='\n')
@@ -107,7 +103,7 @@ class Subject:
 
 
 class School:
-    def __init__(self):
+    def __init__(self, classes):
         self.name = 'МБУ \'Школа № 49 имени С.П. Королёва\''
         self.classes = {cl.class_name for cl in classes}
 
@@ -115,6 +111,29 @@ class School:
         func = ', '.join
         return print(f'Учебное заведение: {self.name} '
                      f'учебные классы: {(func(sorted(self.classes, key=lambda cl: int(cl[:2]))))}')
+
+    def get_class_by_name(self, class_name):
+        """ Возвращает клас по указаному имени, если такого нет, бросает ошибку. ValueError("Класс не найден") """
+        #         TODO: реализовать.
+        return
+    
+    def get_students_by_class(self, class_name):
+        """ Возвращает студента в указаном классе """
+        #         TODO: реализовать.
+        searched_class = self.get_class_by_name()
+        return searched_class.class_group_students()
+    
+    def get_student_by_name(self, first_name, surname, f_name):
+        """ Возвращает студента по его имени """
+        #         TODO: реализовать. Возможно тут сначала удобнее будет получит ьсписок всех студентов по класам. 
+        #          Решай сам.
+        return 
+
+    def get_student_subjects(self, first_name, surname, f_name):
+        """ Возвращает предметы конкретного студента по его имени """
+        #         TODO: реализовать.
+        searched_class = self.get_class_by_name(first_name, surname, f_name)
+        return searched_class.get_student_subjects()
 
 
 dad = [Person('Голубов', 'Геннадий', 'Андреевич'),
@@ -221,17 +240,23 @@ classes = [
     Class('11 Б', 'Экономика, История, Русский язык, Математика, Иностранные языки, Информатика'),
 ]
 
+school = School()
+
 # 1) ++ Получить полный список всех классов школы
-School().school_classes_list()
+school.school_classes_list()
 
 # 2) ++ Получить список всех учеников в указанном классе
-classes[2].class_group_students()
+school.get_students_by_class('7 А')
+school.get_students_by_class('13 Е')
+# classes[2].class_group_students()
 
 # 3) ++ Получить список всех предметов указанного ученика
-students[3].get_student_subjects()
+school.get_student_subjects('Голубова', 'Дина', 'Геннадиевна')
 
 # 4) ++ Узнать ФИО родителей указанного ученика
-students[1].get_parents()
+#  TODO: По аналогии с указаными выше методами
+# students[1].get_parents()
 
 # 5) ++ Получить список всех Учителей, преподающих в указанном классе
+#  TODO: По аналогии с указаными выше методами
 classes[2].class_group_teachers()
